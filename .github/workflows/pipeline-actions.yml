@@ -1,4 +1,4 @@
-name: Build & Tests WebGoat
+name: Build & Test WebGoat
 on: 
     push:
         branches:
@@ -19,11 +19,13 @@ jobs:
                 java-version: '23'
 
             - name: "Build with Maven"
-              run: ./mvnw clean install #Construir la aplicación     
+              run: ./mvnw clean install #Construir la aplicación
+              
+              continue-on-error: false #Si falla, se detiene el pipeline
     test:
         name: "Test"
         runs-on: ubuntu-latest
-        needs: build
+        needs: build #El job sólo se ejecutará si build fue correctamente ejecutado
         steps:
             - name: "Checkout Code"
               uses: actions/checkout@v4
@@ -33,6 +35,8 @@ jobs:
               with:
                 distribution: 'temurin'
                 java-version: '23'
-                
+
             - name: "Run Tests with Maven"
               run: ./mvnw test #Para ejecutar las pruebas unitarias
+
+              continue-on-error: false 
