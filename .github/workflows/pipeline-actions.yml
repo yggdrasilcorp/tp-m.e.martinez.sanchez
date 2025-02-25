@@ -1,5 +1,4 @@
 name: Build & Tests WebGoat
-
 on: 
     push:
         branches:
@@ -7,7 +6,6 @@ on:
     pull_request:
         branches:
             - main
-
 jobs:
     build:
         name: "Build" 
@@ -15,17 +13,13 @@ jobs:
         steps:
             - name: "Checkout Code"
               uses: actions/checkout@v4
-            
             - name: "Setup Java"
               uses: actions/setup-java@v4
               with:
                 distribution: 'temurin'
                 java-version: '23'
-
             - name: "Build with Maven"
-              run: ./mvnw clean install #Construir la aplicación
-
-                
+              run: ./mvnw clean install #Construir la aplicación     
     test:
         name: "Test"
         runs-on: ubuntu-latest
@@ -33,13 +27,10 @@ jobs:
         steps:
             - name: "Checkout Code"
               uses: actions/checkout@v4
-
             - name: "Setup Java"
               uses: actions/setup-java@v4
               with:
                 distribution: 'temurin'
                 java-version: '23'
-            
             - name: "Run Tests with Maven"
               run: ./mvnw test #Para ejecutar las pruebas unitarias
-        
