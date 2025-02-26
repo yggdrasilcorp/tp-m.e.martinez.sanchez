@@ -37,9 +37,12 @@ jobs:
               run: git clone https://github.com/${{ github.repository }}.git .
 
             - name: "Setup Java"
-              run: |
-                sudo apt update
-                sudo apt install -y openjdk-${{ inputs.java-v }}-jdk
+              uses: actions/setup-java@v4.2.1
+              with:
+                  distribution: 'temurin'
+                  java-version: 23
+                  architecture: x64
+                  cache: 'maven'
 
             - name: "Run Tests with Maven"
               run: ./mvnw test #Para ejecutar las pruebas unitarias
