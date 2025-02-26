@@ -23,7 +23,6 @@ jobs:
 
             - name: "Build with Maven"
               run: ./mvnw clean install #Construir la aplicación
-              
               continue-on-error: false #Si falla, se detiene el pipeline
     test:
         name: "Test"
@@ -40,7 +39,4 @@ jobs:
 
             - name: "Run Tests with Maven"
               run: ./mvnw test #Para ejecutar las pruebas unitarias
-
               continue-on-error: false 
-              
-
