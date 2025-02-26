@@ -9,4 +9,4 @@ jobs:
   test-shared-workflow:
     uses: ./.github/workflows/pipeline-actions.yml
     with:
-      java-v: '21'
+      java-v: '23'
