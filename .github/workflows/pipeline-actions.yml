@@ -1,8 +1,8 @@
 name: Build & Test WebGoat
-on: 
+on:
     workflow_call: #llamada para poder ser usado en otros repositorios
       inputs:
-        java-v: 
+        java-v:
           description: "Java Version Required" #es obligatorio que se introduzca como parámetro la versión de java requerida
           required: true
           type: string
@@ -10,7 +10,7 @@ on:
 
 jobs:
     build:
-        name: "Build" 
+        name: "Build"
         runs-on: ubuntu-latest
         steps:
             - name: "Checkout Code"
@@ -30,7 +30,7 @@ jobs:
         needs: build #El job sólo se ejecutará si build fue correctamente ejecutado
         steps:
             - name: "Checkout Code"
-              run: git clone https://github.com/${{ github.repository }}.git . 
+              run: git clone https://github.com/${{ github.repository }}.git .
 
             - name: "Setup Java"
               run: |
@@ -39,4 +39,4 @@ jobs:
 
             - name: "Run Tests with Maven"
               run: ./mvnw test #Para ejecutar las pruebas unitarias
-              continue-on-error: false 
+              continue-on-error: false

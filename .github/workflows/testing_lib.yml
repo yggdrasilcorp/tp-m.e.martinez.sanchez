@@ -10,4 +10,3 @@ jobs:
     uses: ./.github/workflows/pipeline-actions.yml
     with:
       java-v: '17'
-
