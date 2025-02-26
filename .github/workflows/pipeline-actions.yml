@@ -17,9 +17,13 @@ jobs:
               run: git clone https://github.com/${{ github.repository }}.git . #clonamos el repositorio que queremos construir aquí, y evitamos el uso de actions/checkout@v4
 
             - name: "Setup Java"
-              run: |
-                sudo apt update
-                sudo apt install -y openjdk-${{ inputs.java-v }}-jdk
+              uses: actions/setup-java@v4.2.1
+              with:
+                  distribution: 'temurin'
+                  java-version: 23
+                  architecture: x64
+                  cache: 'maven'
+
 
             - name: "Build with Maven"
               run: ./mvnw clean install #Construir la aplicación
