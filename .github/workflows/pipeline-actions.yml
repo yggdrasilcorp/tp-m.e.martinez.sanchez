@@ -1,8 +1,12 @@
 name: Build & Test WebGoat
 on: 
-    push:
-        branches:
-            - main
+    workflow_call: #llamada para poder ser usado en otros repositorios
+      inputs:
+        java-v: 
+          description: "Java Version Required" #es obligatorio que se introduzca como parámetro la versión de java requerida
+          required: true
+          type: string
+
 
 jobs:
     build:
@@ -10,13 +14,12 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: "Checkout Code"
-              uses: actions/checkout@v4
+              run: git clone https://github.com/${{ github.repository }}.git . #clonamos el repositorio que queremos construir aquí, y evitamos el uso de actions/checkout@v4
 
             - name: "Setup Java"
-              uses: actions/setup-java@v4
-              with:
-                distribution: 'temurin'
-                java-version: '23'
+              run: |
+                sudo apt update
+                sudo apt install -y openjdk-${{ inputs.java-v }}-jdk
 
             - name: "Build with Maven"
               run: ./mvnw clean install #Construir la aplicación
@@ -28,13 +31,12 @@ jobs:
         needs: build #El job sólo se ejecutará si build fue correctamente ejecutado
         steps:
             - name: "Checkout Code"
-              uses: actions/checkout@v4
+              run: git clone https://github.com/${{ github.repository }}.git . 
 
             - name: "Setup Java"
-              uses: actions/setup-java@v4
-              with:
-                distribution: 'temurin'
-                java-version: '23'
+              run: |
+                sudo apt update
+                sudo apt install -y openjdk-${{ inputs.java-v }}-jdk
 
             - name: "Run Tests with Maven"
               run: ./mvnw test #Para ejecutar las pruebas unitarias
