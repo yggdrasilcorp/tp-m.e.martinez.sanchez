@@ -1,0 +1,13 @@
+name: Test Shared Workflow
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test-shared-workflow:
+    uses: ./.github/workflows/pipeline-actions.yml
+    with:
+      java-v: '23'
+
