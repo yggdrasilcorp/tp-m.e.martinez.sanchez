@@ -6,6 +6,9 @@ on:
           description: "Java Version Required" #es obligatorio que se introduzca como parámetro la versión de java requerida
           required: true
           type: string
+      secrets:
+        SEMGREP_APP_TOKEN:
+          required: true
 
 
 jobs:
@@ -28,6 +31,18 @@ jobs:
             - name: "Build with Maven"
               run: ./mvnw clean install #Construir la aplicación
               continue-on-error: false #Si falla, se detiene el pipeline
+
+    sast:
+      name: "SAST (Semgrep)"
+      runs-on: ubuntu-latest
+      steps:
+        - name: "Checkout Code"
+          run: git clone https://github.com/${{ github.repository }}.git . #clonamos el repositorio que queremos construir aquí, y evitamos el uso de actions/checkout@v4
+        - name: "Run Semgrep"
+          run: |
+            docker run -e SEMGREP_APP_TOKEN=${{secrets.SEMGREP_APP_TOKEN}} --rm -v $(pwd):/src semgrep/semgrep semgrep ci
+          continue-on-error: false
+
     test:
         name: "Test"
         runs-on: ubuntu-latest
