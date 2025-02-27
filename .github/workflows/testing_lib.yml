@@ -10,3 +10,5 @@ jobs:
     uses: ./.github/workflows/pipeline-actions.yml
     with:
       java-v: '23'
+    secrets:
+      SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
