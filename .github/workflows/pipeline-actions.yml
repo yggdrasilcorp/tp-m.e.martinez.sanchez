@@ -70,25 +70,24 @@ jobs:
       runs-on: ubuntu-latest
       needs: test
       steps:
-        - name: "Checkout Code"
-          run: git clone https://github.com/${{ github.repository }}.git .
         - name: "Run OWASP Dependency-Check"
           run: |
             docker run --rm \
             --volume $(pwd):/src \
-            owasp/dependency-check:7.0.0 \
+            owasp/dependency-check:latest \
             --scan /src \
-            --out ./dependency-check-report.html \
+            --out /tmp/dependency-check-report.html \
             --failOnCVSS 7
           continue-on-error: false
+
+        - name: "Move Report to Correct Location"
+          run: mv /tmp/dependency-check-report.html ./dependency-check-report.html
 
     dast:
       name: "DAST - OWASP ZAP"
       runs-on: ubuntu-latest
       needs: sca
       steps:
-        - name: "Checkout Code"
-          run: git clone https://github.com/${{ github.repository }}.git .
         - name: "Run OWASP Dependency-Check"
           run: |
             docker run --rm \
