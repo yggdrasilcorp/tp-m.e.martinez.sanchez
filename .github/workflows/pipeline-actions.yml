@@ -76,12 +76,9 @@ jobs:
             --volume $(pwd):/src \
             owasp/dependency-check:latest \
             --scan /src \
-            --out /tmp/dependency-check-report.html \
+            --out /report/dependency-check-report.html \
             --failOnCVSS 7
           continue-on-error: false
-
-        - name: "Move Report to Correct Location"
-          run: mv /tmp/dependency-check-report.html ./dependency-check-report.html
 
     dast:
       name: "DAST - OWASP ZAP"
