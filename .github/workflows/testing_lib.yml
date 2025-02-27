@@ -12,4 +12,3 @@ jobs:
       java-v: '23'
     secrets:
       SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
-      
