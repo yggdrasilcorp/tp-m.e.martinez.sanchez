@@ -33,11 +33,12 @@ jobs:
               continue-on-error: false #Si falla, se detiene el pipeline
 
     sast:
-      name: "SAST (Semgrep)"
+      name: "SAST - Semgrep"
       runs-on: ubuntu-latest
       steps:
         - name: "Checkout Code"
           run: git clone https://github.com/${{ github.repository }}.git . #clonamos el repositorio que queremos construir aquí, y evitamos el uso de actions/checkout@v4
+        
         - name: "Run Semgrep"
           run: |
             docker run -e SEMGREP_APP_TOKEN=${{secrets.SEMGREP_APP_TOKEN}} --rm -v $(pwd):/src semgrep/semgrep semgrep ci
