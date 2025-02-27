@@ -78,6 +78,7 @@ jobs:
             --scan /src \
             --out /report/dependency-check-report.html \
             --failOnCVSS 7
+            --disableNVD
           continue-on-error: false
 
     dast:
