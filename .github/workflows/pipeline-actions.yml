@@ -78,5 +78,20 @@ jobs:
             --volume $(pwd):/src:z \
             owasp/dependency-check:7.0.0 \
             --scan /src \
+            --out /src/dependency-check-report.html \
             --failOnCVSS 7
+          continue-on-error: false
+
+    dast:
+      name: "DAST - OWASP ZAP"
+      runs-on: ubuntu-latest
+      needs: sca
+      steps:
+        - name: "Checkout Code"
+          run: git clone https://github.com/${{ github.repository }}.git .
+        - name: "Run OWASP Dependency-Check"
+          run: |
+            docker run --rm \
+            -v $(pwd):/zap/wrk/:rw \
+            -t zaproxy/zap-stable zap-sh
           continue-on-error: false
