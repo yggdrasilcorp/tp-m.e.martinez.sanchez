@@ -74,11 +74,11 @@ jobs:
           run: |
             docker run --rm \
             --volume $(pwd):/src \
+            --volume $HOME/dependency-check:/usr/share/dependency-check/data \
             owasp/dependency-check:latest \
             --scan /src \
             --out /report/dependency-check-report.html \
             --failOnCVSS 7
-            --disableNVD
           continue-on-error: false
 
     dast:
