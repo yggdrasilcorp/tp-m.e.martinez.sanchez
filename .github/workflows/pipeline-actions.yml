@@ -70,9 +70,14 @@ jobs:
         - name: "Checkout Code"
           run: git clone https://github.com/${{ github.repository }}.git .
 
+        - name: "Login to Docker Hub"
+          run: |
+            echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+          continue-on-error: false
+
         - name: "Run OWASP ZAP"
           run: |
-           docker run -v $(pwd):/zap/wrk/:rw -t zaproxy/zaproxy zap-full-scan.py -t https://www.zaproxy.org/
+           docker run -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker zap-full-scan.py -t https://www.zaproxy.org/
           continue-on-error: false
 
 
