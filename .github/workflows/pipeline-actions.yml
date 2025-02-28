@@ -77,14 +77,15 @@ jobs:
           run: docker run --rm --volume $(pwd):/src owasp/dependency-check ls -l /src
 
         - name: "Ejecutar OWASP Dependency-Check"
-          run: |
+          run:  
             docker run --rm \
-            --volume $(pwd)/target:/src/target \ 
-            --volume /tmp/dependency-check-data:/usr/share/dependency-check/data \
+            --volume $(pwd):/src \
             owasp/dependency-check \
-            --scan /src/target \  
-            --out /report/dependency-check-report.html \
-            --failOnCVSS 7
+            --scan /src/target \
+            --out /src/dependency-check-report.html \
+            --failOnCVSS 7 \
+            -n
+          continue-on-error: false
 
 
 
