@@ -70,16 +70,19 @@ jobs:
       runs-on: ubuntu-latest
       needs: test
       steps:
-        - name: "Run OWASP Dependency-Check"
+        - name: "Crear Directorio de Datos"
+          run: mkdir -p /tmp/dependency-check-data
+
+        - name: "Ejecutar OWASP Dependency-Check"
           run: |
             docker run --rm \
             --volume $(pwd):/src \
-            --volume $HOME/dependency-check:/usr/share/dependency-check/data \
+            --volume /tmp/dependency-check-data:/usr/share/dependency-check/data \
             owasp/dependency-check:latest \
-            --scan /src \
+            --scan /src/target \
             --out /report/dependency-check-report.html \
             --failOnCVSS 7
-          continue-on-error: false
+
 
     dast:
       name: "DAST - OWASP ZAP"
