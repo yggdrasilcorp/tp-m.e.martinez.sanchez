@@ -72,8 +72,8 @@ jobs:
         - name: "Run OWASP ZAP"
           run: |
             docker run --rm \
-            -v $(pwd):/zap/wrk/:rw \
-            -t zaproxy/zap-stable zap-sh
+              -v $(pwd):/zap/wrk/:rw \
+              -t zaproxy/zap-stable zap-sh
           continue-on-error: false
 
     sca:
@@ -90,10 +90,10 @@ jobs:
         - name: "Ejecutar OWASP Dependency-Check"
           run:
             docker run --rm \
-            --volume $(pwd):/src \
-            owasp/dependency-check \
-            --scan /src/target \
-            --out /src/dependency-check-report.html \
-            --failOnCVSS 7 \
-            -n
+              --volume $(pwd):/src \
+              owasp/dependency-check \
+              --scan "/src/target" \
+              --out "/src/dependency-check-report.html" \
+              --failOnCVSS 7 \
+              -n
           continue-on-error: false
