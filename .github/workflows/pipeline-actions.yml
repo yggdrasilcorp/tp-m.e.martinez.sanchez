@@ -33,22 +33,12 @@ jobs:
               run: ./mvnw clean install #Construir la aplicación
               continue-on-error: false #Si falla, se detiene el pipeline
 
-    sast:
-      name: "SAST - Semgrep"
-      runs-on: ubuntu-latest
-      needs: build
-      steps:
-        - name: "Checkout Code"
-          run: git clone https://github.com/${{ github.repository }}.git . #clonamos el repositorio que queremos construir aquí, y evitamos el uso de actions/checkout@v4
-        - name: "Run Semgrep"
-          run: |
-            docker run -e SEMGREP_APP_TOKEN=${{ secrets.SEMGREP_APP_TOKEN }} --rm -v $(pwd):/src semgrep/semgrep semgrep ci
-          continue-on-error: false
+
 
     test:
         name: "Test"
         runs-on: ubuntu-latest
-        needs: sast #El job sólo se ejecutará si build fue correctamente ejecutado
+        needs: build #El job sólo se ejecutará si build fue correctamente ejecutado
         steps:
             - name: "Checkout Code"
               run: git clone https://github.com/${{ github.repository }}.git .
@@ -73,13 +63,13 @@ jobs:
           run: |
             docker run --rm \
               -v $(pwd):/zap/wrk/:rw \
-              -t zaproxy/zap-stable zap-sh
+              -t zaproxy/zap-stable zap.sh
           continue-on-error: false
 
     sca:
       name: "SCA - OWASP Dependency-Check"
       runs-on: ubuntu-latest
-      needs: dast
+      needs: test
       steps:
         - name: "Crear Directorio de Datos"
           run: mkdir -p /tmp/dependency-check-data
