@@ -81,7 +81,7 @@ jobs:
 
         - name: "Run OWASP ZAP"
           run: |
-           docker run -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-stable:latest zap-full-scan.py -t https://www.zaproxy.org/
+           docker run -v $(pwd):/zap/wrk/:rw -t zaproxy/zap-stable zap-full-scan.py -t https://www.zaproxy.org/
           continue-on-error: false
 
 
@@ -99,18 +99,19 @@ jobs:
         - name: "Run OWASP Dependency-Check"
           run: |
             docker run --rm \
-              -v $(pwd):/src \
-              owasp/dependency-check:latest \
-              /usr/share/dependency-check/bin/dependency-check.sh --scan /src/ \
-              --format ALL \
-              --project "$GITHUB_REPOSITORY" \
-              --failOnCVSS 0
-          continue-on-error: true
+            -e user=${{secrets.DOCKER_USERNAME}} \
+            -u $(id -u):$(id -g) \
+            --volume $(pwd):/src:z \
+            --volume "$DATA_DIRECTORY":/usr/share/dependency-check/data:z \
+            --volume $(pwd)/odc-reports:/report:z \
+            owasp/dependency-check:latest \
+            --scan /src \
+            --format "ALL" \
+            --project "$DC_PROJECT" \
+            --out /report
+        
+        - name: "Verificar si se generaron los reportes"
+          run: ls -l ./odc-reports
+            
+            
 
-        - name: "Upload OWASP Dependency-Check Reports"
-          uses: actions/upload-artifact@v4
-          with:
-            name: dependency-check-reports
-            path: |
-              ./dependency-check-report.html
-              ./dependency-check-report.json
