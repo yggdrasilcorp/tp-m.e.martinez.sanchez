@@ -72,7 +72,12 @@ jobs:
 
         - name: "Restore Docker Image"
           run: |
-            docker run -d -p 8080:8080 webgoat
+            cp /tmp/webgoat.tar.gz ./webgoat.tar.gz
+            gunzip -c webgoat.tar.gz | docker load
+
+        - name: "Run WebGoat in Docker"
+          run: |
+            docker run -d -p 8080:8080 webgoat  # Ejecutar la imagen webgoat
             sleep 10
 
         - name: "Run OWASP ZAP"
@@ -99,6 +104,5 @@ jobs:
               --scan /src/ \
               --out /src/dependency-check-report.html \
               --failOnCVSS 7 \
-              -n \
-              --autoupdate
+              -n
           continue-on-error: false
