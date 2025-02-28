@@ -84,7 +84,6 @@ jobs:
            docker run -v $(pwd):/zap/wrk/:rw -t zaproxy/zap-stable zap-full-scan.py -t https://www.zaproxy.org/
           continue-on-error: false
 
-
     sca:
       name: "SCA - OWASP Dependency-Check"
       runs-on: ubuntu-latest
@@ -93,13 +92,18 @@ jobs:
         - name: "Checkout Code"
           run: git clone https://github.com/${{ github.repository }}.git .
 
+        - name: "Set DATA_DIRECTORY"
+          run: |
+            export DATA_DIRECTORY="/path/to/data/directory"
+            echo "DATA_DIRECTORY set to $DATA_DIRECTORY"
+
         - name: "Pull OWASP Dependency-Check Docker Image"
           run: docker pull owasp/dependency-check:latest
 
         - name: "Run OWASP Dependency-Check"
           run: |
             docker run --rm \
-            -e user=${{secrets.DOCKER_USERNAME}} \
+            -e user=${{ secrets.DOCKER_USERNAME }} \
             -u $(id -u):$(id -g) \
             --volume $(pwd):/src:z \
             --volume "$DATA_DIRECTORY":/usr/share/dependency-check/data:z \
@@ -109,9 +113,5 @@ jobs:
             --format "ALL" \
             --project "$DC_PROJECT" \
             --out /report
-        
-        - name: "Verificar si se generaron los reportes"
-          run: ls -l ./odc-reports
-            
-            
+
 
