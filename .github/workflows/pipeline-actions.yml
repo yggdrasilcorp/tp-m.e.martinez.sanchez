@@ -74,15 +74,15 @@ jobs:
           run: mkdir -p /tmp/dependency-check-data
 
         - name: "Verificar Archivos en el Contenedor"
-          run: docker run --rm --volume $(pwd):/src owasp/dependency-check:latest ls -l /src
+          run: docker run --rm --volume $(pwd):/src owasp/dependency-check ls -l /src
 
         - name: "Ejecutar OWASP Dependency-Check"
           run: |
             docker run --rm \
-            --volume $(pwd)/target:/src/target \  # Montar solo el target si el escaneo es ahí
+            --volume $(pwd)/target:/src/target \ 
             --volume /tmp/dependency-check-data:/usr/share/dependency-check/data \
-            owasp/dependency-check:latest \
-            --scan /src/target \
+            owasp/dependency-check \
+            --scan /src/target \  
             --out /report/dependency-check-report.html \
             --failOnCVSS 7
 
@@ -93,7 +93,7 @@ jobs:
       runs-on: ubuntu-latest
       needs: sca
       steps:
-        - name: "Run OWASP Dependency-Check"
+        - name: "Run OWASP ZAP"
           run: |
             docker run --rm \
             -v $(pwd):/zap/wrk/:rw \
