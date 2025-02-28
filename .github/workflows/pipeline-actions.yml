@@ -73,7 +73,7 @@ jobs:
           run: mkdir -p /tmp/dependency-check-data
 
         - name: "Ejecutar OWASP Dependency-Check"
-          run:
+          run: |
             docker run --rm \
               --volume $(pwd):/src \
               owasp/dependency-check \
