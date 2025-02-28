@@ -63,7 +63,8 @@ jobs:
           run: |
             docker run --rm \
               -v $(pwd):/zap/wrk/:rw \
-              -t zaproxy/zap-stable zap.sh
+              -t zaproxy/zap-stable \
+              zap.sh -daemon -host 0.0.0.0 -port 8080
           continue-on-error: false
 
     sca:
@@ -73,9 +74,6 @@ jobs:
       steps:
         - name: "Crear Directorio de Datos"
           run: mkdir -p /tmp/dependency-check-data
-
-        - name: "Verificar Archivos en el Contenedor"
-          run: docker run --rm --volume $(pwd):/src owasp/dependency-check ls -l /src
 
         - name: "Ejecutar OWASP Dependency-Check"
           run:
