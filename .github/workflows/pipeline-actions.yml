@@ -72,7 +72,7 @@ jobs:
 
         - name: "Run OWASP ZAP"
           run: |
-            docker run -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-stable zap-full-scan.py -t https://www.zaproxy.org/
+           docker run -v $(pwd):/zap/wrk/:rw -t zaproxy/zaproxy zap-full-scan.py -t https://www.zaproxy.org/
           continue-on-error: false
 
 
