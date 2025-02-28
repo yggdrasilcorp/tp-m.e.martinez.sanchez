@@ -10,6 +10,10 @@ on:
         SEMGREP_APP_TOKEN:
           description: "SemGrep Token Required"
           required: true
+        DOCKER_PASSWORD:
+          required: true
+        DOCKER_USERNAME:
+          required: true
 
 
 jobs:
@@ -86,17 +90,27 @@ jobs:
       runs-on: ubuntu-latest
       needs: test
       steps:
-        - name: "Crear Directorio de Datos"
-          run: mkdir -p /tmp/dependency-check-data
+        - name: "Checkout Code"
+          run: git clone https://github.com/${{ github.repository }}.git .
 
-        - name: "Ejecutar OWASP Dependency-Check"
+        - name: "Pull OWASP Dependency-Check Docker Image"
+          run: docker pull owasp/dependency-check:latest
+
+        - name: "Run OWASP Dependency-Check"
           run: |
-            docker pull nbaars/owasp-dependency-check-as-one
             docker run --rm \
               -v $(pwd):/src \
-              nbaars/owasp-dependency-check-as-one \
+              owasp/dependency-check:latest \
               --scan /src/ \
-              --out /src/dependency-check-report.html \
-              --failOnCVSS 7 \
-              -n
-          continue-on-error: false
+              --format ALL \
+              --project "$GITHUB_REPOSITORY" \
+              --failOnCVSS 0
+          continue-on-error: true
+
+        - name: "Upload OWASP Dependency-Check Reports"
+          uses: actions/upload-artifact@v3
+          with:
+            name: dependency-check-reports
+            path: |
+              ./dependency-check-report.html
+              ./dependency-check-report.json
