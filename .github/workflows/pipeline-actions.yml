@@ -94,8 +94,11 @@ jobs:
 
         - name: "Set DATA_DIRECTORY"
           run: |
-            export DATA_DIRECTORY="/path/to/data/directory"
+            # Define un directorio predeterminado para el contenedor
+            export DATA_DIRECTORY="/tmp/dependency-check-data"  # O cualquier directorio válido que necesites
             echo "DATA_DIRECTORY set to $DATA_DIRECTORY"
+            # Exporta DATA_DIRECTORY al entorno de Docker
+            echo "DATA_DIRECTORY=$DATA_DIRECTORY" >> $GITHUB_ENV
 
         - name: "Pull OWASP Dependency-Check Docker Image"
           run: docker pull owasp/dependency-check:latest
@@ -113,5 +116,6 @@ jobs:
             --format "ALL" \
             --project "$DC_PROJECT" \
             --out /report
+
 
 
