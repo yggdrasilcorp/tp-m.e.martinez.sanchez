@@ -101,7 +101,7 @@ jobs:
             docker run --rm \
               -v $(pwd):/src \
               owasp/dependency-check:latest \
-              --scan /src/ \
+              /usr/share/dependency-check/bin/dependency-check.sh --scan /src/ \
               --format ALL \
               --project "$GITHUB_REPOSITORY" \
               --failOnCVSS 0
