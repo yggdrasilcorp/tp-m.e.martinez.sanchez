@@ -73,15 +73,19 @@ jobs:
         - name: "Crear Directorio de Datos"
           run: mkdir -p /tmp/dependency-check-data
 
+        - name: "Verificar Archivos en el Contenedor"
+          run: docker run --rm --volume $(pwd):/src owasp/dependency-check:latest ls -l /src
+
         - name: "Ejecutar OWASP Dependency-Check"
           run: |
             docker run --rm \
-            --volume $(pwd):/src \
+            --volume $(pwd)/target:/src/target \  # Montar solo el target si el escaneo es ahí
             --volume /tmp/dependency-check-data:/usr/share/dependency-check/data \
             owasp/dependency-check:latest \
             --scan /src/target \
             --out /report/dependency-check-report.html \
             --failOnCVSS 7
+
 
 
     dast:
