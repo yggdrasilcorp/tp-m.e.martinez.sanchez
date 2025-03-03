@@ -7,7 +7,7 @@ on:
 
 jobs:
   test-shared-workflow:
-    uses: ./.github/workflows/pipeline-actions.yml
+    uses: yggdrasilcorp/tp-templates/.github/workflows/template.yml@main
     with:
       java-v: '23'
       web_name: 'webgoat'
