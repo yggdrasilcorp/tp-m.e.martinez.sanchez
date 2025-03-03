@@ -97,31 +97,25 @@ jobs:
       needs: secrets-scan
       steps:
         - name: "Checkout Code"
-          uses: actions/checkout@v4
+          run: git clone https://github.com/${{ github.repository }}.git .
 
         - name: "Create Docker Network"
           run: docker network create webgoat-net  # Crear la red Docker
 
         - name: "Run WebGoat Container"
           run: |
-            docker run -d --name webgoat --network webgoat-net -p 8080:8080 -p 9090:9090 webgoat/webgoat  # Ejecutar WebGoat en la red personalizada
+            docker run -d --name webgoat --network webgoat-net -p 8080:8080 webgoat/webgoat
 
-        - name: "Wait for WebGoat to be ready"
+        - name: "Run OWASP ZAP Container"
           run: |
-            while ! curl -s http://webgoat:8080; do
-              echo "Waiting for WebGoat to start..."
-              sleep 5
-            done
-            echo "WebGoat is ready!"  # Verificar que WebGoat esté listo
+            docker run -d --name zaproxy --network webgoat-net zaproxy/zap-stable zap-baseline.py -t http://webgoat:8080/WebGoat
+            docker logs -f zaproxy
 
-        - name: "Run OWASP ZAP"
+        - name: "Stop Containers"
           run: |
-            docker run --user root --network webgoat-net -v $(pwd):/zap/wrk/:rw zaproxy/zap-stable zap-baseline.py -t http://webgoat:8080 -r scan-report.html  # Ejecutar ZAP usando el nombre de contenedor de WebGoat
-
-        - name: "Stop WebGoat Container"
-          run: |
-            docker stop webgoat  # Detener WebGoat
-            docker rm webgoat  # Eliminar el contenedor WebGoat (si es necesario)
+            docker stop webgoat zaproxy
+            docker rm webgoat zaproxy
+            
 
 
 
