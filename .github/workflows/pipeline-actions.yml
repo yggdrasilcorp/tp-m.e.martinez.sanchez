@@ -100,7 +100,7 @@ jobs:
             
         - name: "Run OWASP ZAP"
           run: |
-           docker run -v $(pwd):/zap/wrk/:rw --network="host" zaproxy/zap-stable zap-baseline.py -t https://localhost:8080 -r scan-report.html
+           docker run --user $(id -u):$(id -g) -v $(pwd):/zap/wrk/:rw --network="host" zaproxy/zap-stable zap-baseline.py -t https://localhost:8080 -r scan-report.html
           continue-on-error: false
 
     secrets-scan:
