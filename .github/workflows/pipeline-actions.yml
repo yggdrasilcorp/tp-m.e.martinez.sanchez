@@ -106,15 +106,23 @@ jobs:
           run: |
             docker run -d --name webgoat --network webgoat-net -p 8080:8080 -p 9090:9090 webgoat/webgoat  # Ejecutar WebGoat en la red personalizada
 
+        - name: "Wait for WebGoat to be ready"
+          run: |
+            while ! curl -s http://webgoat:8080; do
+              echo "Waiting for WebGoat to start..."
+              sleep 5
+            done
+            echo "WebGoat is ready!"  # Verificar que WebGoat esté listo
+
         - name: "Run OWASP ZAP"
           run: |
-            sleep 30  # Dar tiempo para que WebGoat se inicie
             docker run --user root --network webgoat-net -v $(pwd):/zap/wrk/:rw zaproxy/zap-stable zap-baseline.py -t http://webgoat:8080 -r scan-report.html  # Ejecutar ZAP usando el nombre de contenedor de WebGoat
 
         - name: "Stop WebGoat Container"
           run: |
             docker stop webgoat  # Detener WebGoat
-            docker rm webgoat  # Eliminar el contenedor WebGoat
+            docker rm webgoat  # Eliminar el contenedor WebGoat (si es necesario)
+
 
 
     secrets-scan:
