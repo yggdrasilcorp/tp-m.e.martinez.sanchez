@@ -7,7 +7,15 @@ on:
           required: true
           type: string
         web_name:
-          description: "Web Name" #es obligatorio que se introduzca como parámetro la versión de java requerida
+          description: "Web Name" 
+          required: true
+          type: string
+        network-name:
+          description: "Network" 
+          required: true
+          type: string
+        url:
+          description: "URL"
           required: true
           type: string
       secrets:
@@ -100,15 +108,15 @@ jobs:
           run: git clone https://github.com/${{ github.repository }}.git .
 
         - name: "Create Docker Network"
-          run: docker network create webgoat-net  # Crear la red Docker
+          run: docker network create ${{ inputs.network-name }} # Crear la red Docker
 
         - name: "Run WebGoat Container"
           run: |
-            docker run -d --name webgoat --network webgoat-net -p 8080:8080 webgoat/webgoat
+            docker run -d --name ${{ inputs.web_name }} --network ${{ inputs.network-name }}  -p 8080:8080 ${{ inputs.web_name }}/${{ inputs.web_name }} 
 
         - name: "Run OWASP ZAP Container"
           run: |
-            docker run -d --name zaproxy --network webgoat-net zaproxy/zap-stable zap-baseline.py -t http://webgoat:8080/WebGoat
+            docker run -d --name zaproxy --network ${{ inputs.network-name }} zaproxy/zap-stable zap-baseline.py -t ${{ inputs.url }}
             sleep 30
             docker logs -f zaproxy
 
@@ -117,9 +125,6 @@ jobs:
             docker stop webgoat zaproxy
             docker rm webgoat zaproxy
             
-
-
-
     secrets-scan:
         name: "Secrets Scan - TruffleHog"
         runs-on: ubuntu-latest

@@ -11,6 +11,8 @@ jobs:
     with:
       java-v: '23'
       web_name: 'webgoat'
+      network-name: 'webgoat-net'
+      url: 'http://webgoat:8080/WebGoat'
     secrets:
       SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
