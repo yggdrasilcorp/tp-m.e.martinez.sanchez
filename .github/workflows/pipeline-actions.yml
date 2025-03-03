@@ -69,7 +69,7 @@ jobs:
               run: ls -l target  # Verificar si la carpeta 'target' existe
 
             - name: "Build Docker Image"
-              run: docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ inputs.web_name }} .
+              run: docker build -t ${{ inputs.web_name }} .
 
     test:
       name: "Test"
@@ -98,14 +98,19 @@ jobs:
             - name: "Checkout Code"
               uses: actions/checkout@v4
 
+            - name: "Run Container"
+              run: |
+                docker run -d --name webgoat --network webgoat-net -p 8080:8080 -p 9090:9090 webgoat/webgoat
+
             - name: "Run OWASP ZAP"
               run: |
-                sleep 10
+                sleep 30
                 docker run --user root -v $(pwd):/zap/wrk/:rw  zaproxy/zap-stable zap-baseline.py -t http://localhost:8080 -r scan-report.html
               
-            - name: "Stop WebGoat Docker Container"
+            - name: "Stop WebGoat Container"
               run: |
-                docker ps -q --filter "ancestor=${{ secrets.DOCKER_USERNAME }}/${{ inputs.web_name }}" | xargs docker stop
+                docker stop webgoat
+                docker rm webgoat
 
     secrets-scan:
         name: "Secrets Scan - TruffleHog"
