@@ -1,0 +1,16 @@
+name: Test Shared Workflow
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test-shared-workflow:
+    uses: ./.github/workflows/pipeline-actions.yml
+    with:
+      java-v: '23'
+    secrets:
+      SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
