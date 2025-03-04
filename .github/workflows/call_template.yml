@@ -13,3 +13,5 @@ jobs:
       web_name: 'webgoat'
       network-name: 'webgoat-net'
       url: 'http://webgoat:8080/WebGoat'
+    secrets:
+      NVD_API_KEY: ${{ secrets.NVD_API_KEY }}   
