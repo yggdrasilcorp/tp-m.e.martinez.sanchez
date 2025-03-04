@@ -1,4 +1,4 @@
-name: Test Shared Workflow
+name: Call Shared Workflow
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  test-shared-workflow:
+  call-shared-workflow:
     uses: yggdrasilcorp/tp-templates/.github/workflows/template.yml@main
     with:
       java-v: '23'
