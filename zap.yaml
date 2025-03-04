@@ -3,8 +3,8 @@ env:
   - excludePaths: []
     name: baseline
     urls:
-    - http://localhost:8080/WebGoat
-    - http://localhost:8080/
+    - http://webgoat:8080/WebGoat
+    - http://webgoat:8080/
   parameters:
     failOnError: true
     progressToStdout: false
@@ -15,7 +15,7 @@ jobs:
   type: passiveScan-config
 - parameters:
     maxDuration: 1
-    url: http://localhost:8080/
+    url: http://webgoat:8080/
   type: spider
 - parameters:
     maxDuration: 0
@@ -28,7 +28,7 @@ jobs:
 - parameters:
     reportDescription: ''
     reportDir: /zap/wrk/
-    reportFile: scan-report.html
+    reportFile: /zap/wrk/rep.html
     reportTitle: ZAP Scanning Report
     template: traditional-html
   type: report
